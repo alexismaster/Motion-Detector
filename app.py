@@ -6,6 +6,16 @@ import numpy as np
 import cv2
 import pyglet
 import datetime
+import threading
+
+
+# Запуск веб сервера в отдельном процессе
+def clock(interval):
+    execfile('admin.py')
+th = threading.Thread(target=clock, args=(15,))
+th.daemon = True
+th.start()
+
 
 
 countLimit  = 15                # Порог срабатывания тревоги (число обнаруженных белых пикселов)
@@ -50,6 +60,27 @@ def buzzer():
         song.play()
         isSignal = 100
     return
+
+
+if cap.isOpened():
+    frame = cap.read()
+
+
+# Сохраняеттекущий кадр в файл
+def saveCurrentImage():
+    params = list()
+    params.append(cv2.cv.CV_IMWRITE_PNG_COMPRESSION)
+    params.append(8)
+    #now = datetime.datetime.now()
+    filename = './current.png';
+
+    image = cv2.cvtColor(frame[1], cv2.COLOR_RGB2GRAY)
+    cv2.rectangle(image, point1, point2, (0,153,204), 2, cv2.CV_AA)
+
+    cv2.imwrite(filename, image, params)
+    return
+
+saveCurrentImage()
 
 
 
