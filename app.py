@@ -5,12 +5,14 @@
 import numpy as np
 import cv2
 import pyglet
+import datetime
 
 
 countLimit  = 15                # Порог срабатывания тревоги (число обнаруженных белых пикселов)
 width       = 120               # Катет квадрата слежения
 point1      = (230, 245)        # Положение левого верхнего угла области слежения
 winLeft     = 1930              # Смещение окон с видео
+saveToFile  = True              # Сохранение снимков в файл
 
 
 
@@ -44,7 +46,6 @@ def buzzer():
     global isSignal
     
     if isSignal == 0:
-        #song = pyglet.media.load('/home/alexismaster/Музыка/buzzer3_x.wav')
         song = pyglet.media.load('./alarm.wav')
         song.play()
         isSignal = 100
@@ -86,6 +87,17 @@ while(cap.isOpened()):
     # Если обнаружено движение
     if countNonZero > countLimit:
         print 'motion detected, countNonZero = ', countNonZero
+
+        # Сохранение фотки в файл
+        if saveToFile:
+            params = list()
+            params.append(cv2.cv.CV_IMWRITE_PNG_COMPRESSION)
+            params.append(8)
+            now = datetime.datetime.now()
+            filename = './photos/' + now.strftime("%Y-%m-%d_%H:%M:%S") + '.png';
+            cv2.imwrite(filename, frame[1], params)
+
+        # Звуковой сигнал
         buzzer()
 
     # Картинка 2
