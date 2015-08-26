@@ -1,13 +1,21 @@
 
 
-# Установка OpenCV (Linux Debian)
+# Описание
+
+Python скрипт для детектирования движения на видео с веб-камеры.
+
+
+
+# Установка
+
+### Установка OpenCV (Linux Debian)
 
 ```
 sudo apt-get install libopencv-dev python-opencv
 ```
 
 
-# Установка звуковой библиотеки (Linux Debian)
+### Установка звуковой библиотеки (Linux Debian)
 
 ```
 sudo apt-get install python-setuptools
@@ -16,7 +24,7 @@ sudo python setup.py install
 ```
 
 
-# Полезные статьи:
+### Полезные статьи:
 
 ```
 http://robot-develop.org/archives/2328
