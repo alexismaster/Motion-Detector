@@ -9,6 +9,14 @@ import datetime
 import threading
 
 
+countLimit  = 15                # Порог срабатывания тревоги (число обнаруженных белых пикселов)
+width       = 120               # Катет квадрата слежения
+point1      = (230, 245)        # Положение левого верхнего угла области слежения
+winLeft     = 1930              # Смещение окон с видео
+saveToFile  = True              # Сохранение снимков в файл
+
+
+
 # Запуск веб сервера в отдельном процессе
 def clock(interval):
     execfile('admin.py')
@@ -18,17 +26,9 @@ th.start()
 
 
 
-countLimit  = 15                # Порог срабатывания тревоги (число обнаруженных белых пикселов)
-width       = 120               # Катет квадрата слежения
-point1      = (230, 245)        # Положение левого верхнего угла области слежения
-winLeft     = 1930              # Смещение окон с видео
-saveToFile  = True              # Сохранение снимков в файл
-
-
 
 point2 = (point1[0] + width, point1[1] + width)
 cap    = cv2.VideoCapture(0)
-#cap = cv2.VideoCapture('/home/alexismaster/Видео/video.avi')
 
 # начальные значения...
 t_minus = cv2.cvtColor(cap.read()[1], cv2.COLOR_RGB2GRAY)
@@ -56,10 +56,16 @@ def buzzer():
     global isSignal
     
     if isSignal == 0:
-        song = pyglet.media.load('./alarm.wav')
-        song.play()
         isSignal = 100
+        
+        src = pyglet.media.load('./alarm.wav')
+        player = pyglet.media.Player()
+        player.queue(src)
+        player.volume = 0.3
+        player.play()
     return
+
+buzzer()
 
 
 if cap.isOpened():
@@ -68,15 +74,14 @@ if cap.isOpened():
 
 # Сохраняеттекущий кадр в файл
 def saveCurrentImage():
-    params = list()
+    image    = cv2.cvtColor(frame[1], cv2.COLOR_RGB2GRAY)
+    filename = './current.png';
+    params   = list()
+    
     params.append(cv2.cv.CV_IMWRITE_PNG_COMPRESSION)
     params.append(8)
-    #now = datetime.datetime.now()
-    filename = './current.png';
 
-    image = cv2.cvtColor(frame[1], cv2.COLOR_RGB2GRAY)
     cv2.rectangle(image, point1, point2, (0,153,204), 2, cv2.CV_AA)
-
     cv2.imwrite(filename, image, params)
     return
 
@@ -138,9 +143,6 @@ while(cap.isOpened()):
     # Картинка 1
     cv2.rectangle(frame[1], point1, point2, (0,153,204), 2, cv2.CV_AA)
     cv2.imshow(winName2, frame[1])
-
-    # Маленькая картинка
-    #cv2.imshow('diff', im)
 
     # Большие значения задержки позволяют лучше реагировать на медленное движение
     # Для увеличения плавности видео задержку следует уменьшить (оптимальное значение - 25 ms)
