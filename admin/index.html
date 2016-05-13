@@ -11,15 +11,19 @@
             padding: 13px;
             display: block;
             float: left;
+            text-decoration: none;
         }
+
         form a:hover {
             background: #444;
         }
+
         form:after {
             content: '';
             display: block;
             clear: both;
         }
+
         form {
             margin-bottom: 10px;
         }
@@ -28,10 +32,12 @@
 <body>
 
     <form>
-        <a href="/left">left</a>
-        <a href="/right">right</a>
-        <a href="/top">top</a>
-        <a href="/bottom">bottom</a>
+        <a href="/left">&#9668;</a>
+        <a href="/right">&#9658;</a>
+        <a href="/top">&#9650;</a>
+        <a href="/bottom">&#9660;</a>
+        <a href="/width_plus">&lt;&middot;&middot;&middot;&middot;&gt;</a>
+        <a href="/width_minus">&gt;&middot;&middot;&middot;&middot;&lt;</a>
         <a href="/refresh">refresh</a>
     </form>
 
@@ -40,7 +46,7 @@
     <script type="text/javascript">
         onload = function () {
             document.querySelector('form').addEventListener('click', function () {
-                //alert(0)
+                // ....
             });
         };
     </script>
