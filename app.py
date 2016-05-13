@@ -9,12 +9,37 @@ import datetime
 import threading
 
 
+import json
+from pprint import pprint
+
+
+
 countLimit  = 15                # Порог срабатывания тревоги (число обнаруженных белых пикселов)
 width       = 120               # Катет квадрата слежения
 point1      = (230, 245)        # Положение левого верхнего угла области слежения
 winLeft     = 1930              # Смещение окон с видео
 saveToFile  = True              # Сохранение снимков в файл
 
+
+
+
+# Чтение конфига
+with open('./settings.json') as data_file:    
+  data = json.load(data_file)
+
+point1 = (data['point1'][0], data['point1'][1])
+width  = data['width']
+
+
+# Сохраняет текущие настройки в файл
+def saveSettings():
+    data['point1'][0] = point1[0]
+    data['point1'][1] = point1[1]
+    data['width'] = width
+
+    with open('./settings.json', 'w') as outfile:
+        json.dump(data, outfile)
+    return
 
 
 # Запуск веб сервера в отдельном процессе
@@ -57,7 +82,7 @@ def buzzer():
     
     if isSignal == 0:
         isSignal = 100
-        
+
         src = pyglet.media.load('./alarm.wav')
         player = pyglet.media.Player()
         player.queue(src)
